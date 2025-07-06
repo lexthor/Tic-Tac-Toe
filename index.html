@@ -10,11 +10,22 @@
 
     <div class="game-header">
         <h1 class="game-title">🎮 Tic Tac Toe</h1>
+        <div class="game-mode-selector">
+            <button class="mode-btn active" id="humanVsHumanBtn">👥 Human vs Human</button>
+            <button class="mode-btn" id="humanVsAiBtn">🤖 Human vs AI</button>
+        </div>
+        
+        <div class="difficulty-selector" id="difficultySelector">
+            <button class="difficulty-btn active" id="easyBtn">😊 Easy</button>
+            <button class="difficulty-btn" id="mediumBtn">😐 Medium</button>
+            <button class="difficulty-btn" id="hardBtn">😈 Hard</button>
+        </div>
+
         <div class="game-status" id="gameStatus">Drag & Drop to Play!</div>
-        <div class="turn-indicator" id="turnIndicator">Player 1 goes first</div>
+        <div class="turn-indicator" id="turnIndicator">Player1 goes first</div>
         <div class="score-board">
-            <div class="score-item">Player 1: <span id="crossScore">0</span></div>
-            <div class="score-item">Player 2: <span id="circleScore">0</span></div>
+            <div class="score-item">Player1: <span id="crossScore">0</span></div>
+            <div class="score-item">Player2: <span id="circleScore">0</span></div>
             <div class="score-item">Draws: <span id="drawScore">0</span></div>
         </div>
     </div>
