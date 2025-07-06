@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe | Drag & Drop Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-header">
+        <h1 class="game-title">🎮 Tic Tac Toe</h1>
+        <div class="game-status" id="gameStatus">Drag & Drop to Play!</div>
+        <div class="turn-indicator" id="turnIndicator">Player 1 goes first</div>
+        <div class="score-board">
+            <div class="score-item">Player 1: <span id="crossScore">0</span></div>
+            <div class="score-item">Player 2: <span id="circleScore">0</span></div>
+            <div class="score-item">Draws: <span id="drawScore">0</span></div>
+        </div>
+    </div>
+
+    <div class="game-container">
+    
+        <div class="drag" id="crossSide">  
+            <div class="dragBox">
+                <div class="cross" draggable="true" id="cross1"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="cross" draggable="true" id="cross2"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="cross" draggable="true" id="cross3"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="cross" draggable="true" id="cross4"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="cross" draggable="true" id="cross5"></div>
+            </div>
+        </div>
+
+
+        <div class="board" id="gameBoard">
+            <div class="dropBox" data-cell="0"></div>
+            <div class="dropBox" data-cell="1"></div>
+            <div class="dropBox" data-cell="2"></div>
+            <div class="dropBox" data-cell="3"></div>
+            <div class="dropBox" data-cell="4"></div>
+            <div class="dropBox" data-cell="5"></div>
+            <div class="dropBox" data-cell="6"></div>
+            <div class="dropBox" data-cell="7"></div>
+            <div class="dropBox" data-cell="8"></div>
+        </div>
+            
+
+        <div class="drag" id="circleSide">
+            <div class="dragBox">
+                <div class="circle" draggable="true" id="circle1"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="circle" draggable="true" id="circle2"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="circle" draggable="true" id="circle3"></div>
+            </div>
+
+            <div class="dragBox">
+                <div class="circle" draggable="true" id="circle4"></div>
+            </div>
+            
+            <div class="dragBox">
+                <div class="circle" draggable="true" id="circle5"></div>
+            </div>
+        </div>   
+    </div>
+
+    <div class="controls">
+        <button class="reset" id="resetBtn">🔄 Reset Round</button>
+        <button class="new-game" id="newGameBtn">🎮 New Game</button>
+    </div>
+
+
+    <div class="game-over-modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Game Over!</h2>
+            <p id="modalMessage">Congratulations!</p>
+            <button class="new-game" onclick="startNewRound()">Play Again</button>
+        </div>
+    </div>
+
+
+    <script src="script.js" defer></script>
+</body>
+</html>

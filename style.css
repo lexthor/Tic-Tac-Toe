@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, #0085ff, #ff1458);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.game-status {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-board {
+    display: flex;
+    gap: 40px;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.score-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.board .dropBox {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-right: 4px solid #fff;
+    border-bottom: 4px solid #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.board .dropBox:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.board .dropBox.drag-over {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.board .dropBox.winning-cell {
+    background: rgba(255, 255, 255, 0.3);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.board .dropBox:nth-child(3),
+.board .dropBox:nth-child(6),
+.board .dropBox:nth-child(9) {
+    border-right: none;
+}
+
+.board .dropBox:nth-child(7),
+.board .dropBox:nth-child(8),
+.board .dropBox:nth-child(9) {
+    border-bottom: none;
+}
+
+.board .dropBox div {
+    pointer-events: none;
+    scale: 1.5;
+    animation: placeAnimation 0.3s ease;
+}
+
+@keyframes placeAnimation {
+    0% { transform: scale(0) rotate(0deg); }
+    50% { transform: scale(1.8) rotate(180deg); }
+    100% { transform: scale(1.5) rotate(360deg); }
+}
+
+.drag {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 420px;
+    width: 100px;
+    gap: 10px;
+    margin: 0 40px;
+    cursor: grab;
+}
+
+.drag .dragBox {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.drag .dragBox:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.drag .dragBox.dragging {
+    opacity: 0.5;
+}
+
+.drag .dragBox.used {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.cross {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cross::before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    background: #fff;
+    transform: rotate(45deg);
+}
+
+.cross::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    background: #fff;
+    transform: rotate(-45deg);
+}
+
+.circle {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.reset, .new-game {
+    padding: 12px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.reset:hover, .new-game:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.game-over-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    backdrop-filter: blur(15px);
+}
+
+.modal-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.turn-indicator {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.disabled-side {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .drag {
+        flex-direction: row;
+        height: 100px;
+        width: 350px;
+    }
+    
+    .board {
+        margin: 0;
+    }
+}
