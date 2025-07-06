@@ -8,7 +8,8 @@
 }
 
 body {
-    background: linear-gradient(45deg, #0085ff, #ff1458);
+    background: #3F5EFB;
+    background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
     color: #fff;
     display: flex;
     justify-content: center;
