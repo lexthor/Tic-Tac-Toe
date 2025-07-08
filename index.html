@@ -8,12 +8,22 @@
 </head>
 <body>
 
-    <div class="game-header">
-        <h1 class="game-title">🎮 Tic Tac Toe</h1>
-        <div class="game-mode-selector">
-            <button class="mode-btn active" id="humanVsHumanBtn">👥 Player vs Player</button>
+    
+
+    <div class="game-start-modal" id="gameStartModal">
+        <div class="modal-content">
+            <h2>Select Game Mode</h2>
+            <button class="mode-btn" id="humanVsHumanBtn">👥 Player vs Player</button>
             <button class="mode-btn" id="humanVsAiBtn">🤖 Player vs AI</button>
         </div>
+    </div>
+
+    <div class="game-header">
+        <h1 class="game-title">🎮 Tic Tac Toe</h1>
+        <!-- <div class="game-mode-selector">
+            <button class="mode-btn active" id="humanVsHumanBtn">👥 Player vs Player</button>
+            <button class="mode-btn" id="humanVsAiBtn">🤖 Player vs AI</button>
+        </div> -->
         
         <div class="difficulty-selector" id="difficultySelector">
             <button class="difficulty-btn active" id="easyBtn">😊 Easy</button>
@@ -104,6 +114,7 @@
             <button class="new-game" onclick="startNewRound()">Play Again</button>
         </div>
     </div>
+
 
 
     <script src="script.js" defer></script>

@@ -248,6 +248,20 @@ function startNewGame() {
     resetRound();
     scores = { cross: 0, circle: 0, draw: 0 };
     updateScoreDisplay();
+
+
+    // Reset difficulty to 'easy'
+    aiDifficulty = 'easy';
+
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById('easyBtn').classList.add('active');
+
+    // show the game model again
+    const startModal = document.getElementById('gameStartModal');
+    startModal.style.display = 'flex';
+
 }
 
 function startNewRound() {
@@ -390,3 +404,22 @@ document.getElementById('hardBtn').addEventListener('click', () => setDifficulty
 
 // Initialize the game
 initGame();
+
+window.addEventListener('DOMContentLoaded', () => {
+    const startModal = document.getElementById('gameStartModal');
+    const popupVsHuman = document.getElementById('humanVsHumanBtn');
+    const popupVsAI = document.getElementById('humanVsAiBtn');
+
+    popupVsHuman.addEventListener('click', () => {
+        setGameMode('human');
+        startModal.style.display = 'none';
+    });
+
+    popupVsAI.addEventListener('click', () => {
+        setGameMode('ai');
+        startModal.style.display = 'none';
+    });
+
+    // Show modal on load
+    startModal.style.display = 'flex';
+});
