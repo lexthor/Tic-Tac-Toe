@@ -2,6 +2,10 @@ export class UI {
     constructor() {
         this.gameStartModal = document.getElementById('gameStartModal');
         this.gameOverModal = document.getElementById('gameOverModal');
+        this.mainMenuView = document.getElementById('main-menu-view');
+        this.onlineMenuView = document.getElementById('online-menu-view');
+        this.roomIdInput = document.getElementById('roomIdInput');
+        this.roomIdDisplay = document.getElementById('roomIdDisplay');
         this.modalTitle = document.getElementById('modalTitle');
         this.modalMessage = document.getElementById('modalMessage');
         this.gameStatus = document.getElementById('gameStatus');
@@ -31,6 +35,35 @@ export class UI {
 
     hideGameOverModal() {
         this.gameOverModal.style.display = 'none';
+    }
+
+    showOnlineMenu() {
+        this.mainMenuView.classList.add('hidden');
+        this.onlineMenuView.classList.remove('hidden');
+    }
+
+    showMainMenu() {
+        this.onlineMenuView.classList.add('hidden');
+        this.mainMenuView.classList.remove('hidden');
+    }
+
+    getRoomIdInput() {
+        return this.roomIdInput.value;
+    }
+
+    showRoomId(roomId) {
+        this.roomIdDisplay.textContent = `Room ID: ${roomId}`;
+    }
+
+    updateBoard(board) {
+        document.querySelectorAll('.dropBox').forEach((cell, index) => {
+            cell.innerHTML = '';
+            if (board[index]) {
+                const piece = this.createPiece(board[index], index);
+                piece.draggable = false;
+                cell.appendChild(piece);
+            }
+        });
     }
 
     updateGameStatus(message) {
@@ -121,7 +154,11 @@ this.resetDragBoxes();
     }
 
     toggleDifficultySelector(show) {
-        this.difficultySelector.style.display = show ? 'flex' : 'none';
+        this.difficultySelector.classList.toggle('hidden', !show);
+    }
+
+    hideDifficultySelector() {
+        this.difficultySelector.classList.add('hidden');
     }
 
     setActiveButton(buttonType, activeId) {

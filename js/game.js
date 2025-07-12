@@ -3,11 +3,15 @@ import { UI } from './ui.js';
 import { AI } from './ai.js';
 
 export class Game {
-    constructor() {
+    constructor(socket) {
+        this.socket = socket;
         this.ui = new UI();
         this.ai = new AI();
+        this.roomId = null;
+        this.playerSymbol = null;
         this.resetGame();
         this.addEventListeners();
+        this.addSocketListeners();
     }
 
     resetGame() {
@@ -25,6 +29,7 @@ export class Game {
         this.ui.updateGameStatus('Drag & Drop to Play!');
         this.ui.hideGameOverModal();
         this.ui.showGameStartModal();
+        this.ui.showMainMenu();
     }
 
     addEventListeners() {
@@ -32,18 +37,76 @@ export class Game {
         document.getElementById('newGameBtn').addEventListener('click', () => this.resetGame());
         document.querySelector('#gameOverModal .new-game').addEventListener('click', () => this.resetRound());
 
-        document.getElementById('humanVsHumanBtn').addEventListener('click', () => this.setGameMode('human'));
+        document.getElementById('onlineBtn').addEventListener('click', () => this.setGameMode('online'));
         document.getElementById('humanVsAiBtn').addEventListener('click', () => this.setGameMode('ai'));
+
+        document.getElementById('createRoomBtn').addEventListener('click', () => this.createRoom());
+        document.getElementById('joinRoomBtn').addEventListener('click', () => this.joinRoom());
+        document.getElementById('backBtn').addEventListener('click', () => this.ui.showMainMenu());
 
         document.getElementById('easyBtn').addEventListener('click', () => this.setDifficulty('easy'));
         document.getElementById('mediumBtn').addEventListener('click', () => this.setDifficulty('medium'));
         document.getElementById('hardBtn').addEventListener('click', () => this.setDifficulty('hard'));
 
-        document.getElementById('gameStartModal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('mode-btn')) {
-                this.ui.hideGameStartModal();
-            }
-        });
+    }
+
+    addSocketListeners() {
+        this.socket.on('roomCreated', (roomId) => this.handleRoomCreated(roomId));
+        this.socket.on('startGame', (room) => this.handleStartGame(room));
+        this.socket.on('moveMade', (room) => this.handleMoveMade(room));
+        this.socket.on('playerLeft', () => this.handlePlayerLeft());
+        this.socket.on('error', (message) => this.ui.updateGameStatus(message));
+    }
+
+    createRoom() {
+        this.socket.emit('createRoom');
+    }
+
+    joinRoom(roomId = null) {
+        const id = roomId || this.ui.getRoomIdInput();
+        if (id) {
+            this.socket.emit('joinRoom', id);
+        }
+    }
+
+    handleRoomCreated(roomId) {
+        this.roomId = roomId;
+        this.playerSymbol = 'cross';
+        this.ui.showRoomId(roomId);
+        this.ui.updateGameStatus('Waiting for another player to join...');
+    }
+
+    handleStartGame(room) {
+        this.ui.hideGameStartModal();
+        this.gameBoard = room.board;
+        this.currentPlayer = room.currentPlayer;
+        if (!this.playerSymbol) {
+            this.playerSymbol = 'circle';
+        }
+        this.ui.updateBoard(this.gameBoard);
+        this.ui.updateTurnIndicator(this.currentPlayer);
+        this.ui.updateGameStatus(`${this.currentPlayer === this.playerSymbol ? 'Your' : "Opponent's"} turn`);
+    }
+
+    handleMoveMade(room) {
+        this.gameBoard = room.board;
+        this.currentPlayer = room.currentPlayer;
+        this.ui.updateBoard(this.gameBoard);
+        const winningCombination = this.checkWinner();
+        if (winningCombination) {
+            this.endGame(`🎉 ${this.gameBoard[winningCombination[0]] === this.playerSymbol ? 'You' : 'Opponent'} win!`);
+            this.ui.highlightWinningCells(this.gameBoard, [winningCombination]);
+        } else if (this.gameBoard.every(cell => cell !== null)) {
+            this.endGame("🤝 It's a draw!");
+        } else {
+            this.ui.updateTurnIndicator(this.currentPlayer);
+            this.ui.updateGameStatus(`${this.currentPlayer === this.playerSymbol ? 'Your' : "Opponent's"} turn`);
+        }
+    }
+
+    handlePlayerLeft() {
+        this.ui.updateGameStatus('Your opponent has left the game.');
+        this.gameActive = false;
     }
 
     addDragAndDropListeners() {
@@ -92,9 +155,16 @@ export class Game {
         const draggedElement = document.getElementById(data);
         const pieceType = draggedElement.classList.contains('cross') ? 'cross' : 'circle';
 
-        if (pieceType !== this.currentPlayer) {
-            this.ui.updateGameStatus("❌ Wait for your turn!");
-            return;
+        if (this.gameMode === 'online') {
+            if (pieceType !== this.playerSymbol || this.currentPlayer !== this.playerSymbol) {
+                this.ui.updateGameStatus("❌ Wait for your turn!");
+                return;
+            }
+        } else {
+            if (pieceType !== this.currentPlayer) {
+                this.ui.updateGameStatus("❌ Wait for your turn!");
+                return;
+            }
         }
 
         if (this.gameMode === 'ai' && this.currentPlayer === 'circle') {
@@ -106,7 +176,14 @@ export class Game {
             return;
         }
 
-        this.makeMove(event.target, pieceType);
+        const cellIndex = parseInt(event.target.dataset.cell);
+        if (this.gameBoard[cellIndex] !== null) return;
+
+        if (this.gameMode === 'online') {
+            this.socket.emit('makeMove', { roomId: this.roomId, cellIndex, pieceType });
+        } else {
+            this.makeMove(event.target, pieceType);
+        }
     }
 
     makeMove(targetCell, pieceType) {
@@ -138,7 +215,7 @@ export class Game {
     }
 
     checkWinner() {
-        return WINNING_COMBINATIONS.some(combination => {
+        return WINNING_COMBINATIONS.find(combination => {
             const [a, b, c] = combination;
             return this.gameBoard[a] && this.gameBoard[a] === this.gameBoard[b] && this.gameBoard[a] === this.gameBoard[c];
         });
@@ -151,6 +228,9 @@ export class Game {
     }
 
     resetRound() {
+        if (this.gameMode === 'online') {
+            return;
+        }
         this.gameBoard = Array(9).fill(null);
         this.gameActive = true;
         this.currentPlayer = 'cross';
@@ -163,11 +243,18 @@ export class Game {
         this.ui.hideGameOverModal();
     }
 
-    setGameMode(mode) {
+    setGameMode(mode, autoJoin = false) {
         this.gameMode = mode;
-        this.ui.toggleDifficultySelector(mode === 'ai');
-        this.ui.setActiveButton('mode', mode === 'human' ? 'humanVsHumanBtn' : 'humanVsAiBtn');
-        this.resetRound();
+        if (mode === 'online') {
+            if (!autoJoin) {
+                this.ui.showOnlineMenu();
+            }
+            this.ui.hideDifficultySelector();
+        } else {
+            this.ui.toggleDifficultySelector(mode === 'ai');
+            this.ui.setActiveButton('mode', 'humanVsAiBtn');
+            this.resetRound();
+        }
     }
 
     setDifficulty(difficulty) {

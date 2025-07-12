@@ -12,9 +12,21 @@
 
     <div class="game-start-modal" id="gameStartModal">
         <div class="modal-content">
-            <h2>Select Game Mode</h2>
-            <button class="mode-btn" id="humanVsHumanBtn">👥 Player vs Player</button>
-            <button class="mode-btn" id="humanVsAiBtn">🤖 Player vs AI</button>
+            <div id="main-menu-view">
+                <h2>Select Game Mode</h2>
+                <button class="mode-btn" id="onlineBtn">👥 Player vs Player</button>
+                <button class="mode-btn" id="humanVsAiBtn">🤖 Player vs AI</button>
+            </div>
+            <div id="online-menu-view" class="hidden">
+                <h2>Play Online</h2>
+                <button class="mode-btn" id="createRoomBtn">Create Room</button>
+                <div class="join-room-container">
+                    <input type="text" id="roomIdInput" placeholder="Enter Room ID">
+                    <button class="mode-btn" id="joinRoomBtn">Join Room</button>
+                </div>
+                <p id="roomIdDisplay"></p>
+                <button class="mode-btn back-btn" id="backBtn">Back</button>
+            </div>
         </div>
     </div>
 
@@ -91,6 +103,7 @@
 
 
 
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/main.js" type="module" defer></script>
 </body>
 </html>

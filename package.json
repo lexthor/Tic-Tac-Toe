@@ -1,0 +1,24 @@
+{
+  "name": "tic-tac-toe-game",
+  "version": "1.0.0",
+  "description": "https://lexthor.github.io/Tic-Tac-Toe/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexthor/Tic-Tac-Toe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexthor/Tic-Tac-Toe/issues"
+  },
+  "homepage": "https://github.com/lexthor/Tic-Tac-Toe#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  }
+}
