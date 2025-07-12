@@ -76,6 +76,7 @@ export class UI {
     }
 
     recreateAllPieces() {
+this.resetDragBoxes();
         document.querySelectorAll('.cross, .circle').forEach(piece => piece.remove());
 
         for (let i = 1; i <= 5; i++) {
@@ -98,7 +99,7 @@ export class UI {
     }
 
     placePiece(targetCell, pieceType) {
-        const originalPiece = document.querySelector(`.${pieceType}:not(.used)`);
+        const originalPiece = document.querySelector(`.dragBox:not(.used) .${pieceType}`);
         if (originalPiece) {
             const clonedPiece = originalPiece.cloneNode(true);
             clonedPiece.id = originalPiece.id + '_placed';

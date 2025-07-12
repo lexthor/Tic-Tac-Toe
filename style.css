@@ -24,9 +24,9 @@ body {
 }
 
 .game-title {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -245,7 +245,7 @@ body {
 .difficulty-selector {
     display: none;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     justify-content: center;
 }
 

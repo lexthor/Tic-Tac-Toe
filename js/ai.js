@@ -12,7 +12,7 @@ export class AI {
     getMove(gameBoard) {
         switch (this.difficulty) {
             case 'easy':
-                return this.getRandomMove(gameBoard);
+                return this.getEasyMove(gameBoard);
             case 'medium':
                 return this.getMediumMove(gameBoard);
             case 'hard':
@@ -20,6 +20,10 @@ export class AI {
             default:
                 return this.getRandomMove(gameBoard);
         }
+    }
+
+    getEasyMove(gameBoard) {
+        return Math.random() < 0.5 ? this.getHardMove(gameBoard) : this.getRandomMove(gameBoard);
     }
 
     getRandomMove(gameBoard) {
@@ -33,7 +37,7 @@ export class AI {
     }
 
     getMediumMove(gameBoard) {
-        return Math.random() < 0.5 ? this.getHardMove(gameBoard) : this.getRandomMove(gameBoard);
+        return Math.random() < 0.7 ? this.getHardMove(gameBoard) : this.getRandomMove(gameBoard);
     }
 
     getHardMove(gameBoard) {

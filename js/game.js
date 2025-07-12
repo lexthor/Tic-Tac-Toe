@@ -30,7 +30,7 @@ export class Game {
     addEventListeners() {
         document.getElementById('resetBtn').addEventListener('click', () => this.resetRound());
         document.getElementById('newGameBtn').addEventListener('click', () => this.resetGame());
-        document.querySelector('.new-game[onclick="startNewRound()"]').addEventListener('click', () => this.resetRound());
+        document.querySelector('#gameOverModal .new-game').addEventListener('click', () => this.resetRound());
 
         document.getElementById('humanVsHumanBtn').addEventListener('click', () => this.setGameMode('human'));
         document.getElementById('humanVsAiBtn').addEventListener('click', () => this.setGameMode('ai'));
